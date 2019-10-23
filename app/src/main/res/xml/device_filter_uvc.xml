@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- UVC(Miscellaneous device class) -->
+    <usb-device class="239" subclass="2" />
+	<!-- UVC Video control interface-->
+	<usb-device class="14" subclass="1" />
+	<!-- UVC Video stream interface-->
+	<usb-device class="14" subclass="2" />
+</resources>
