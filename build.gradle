@@ -39,7 +39,8 @@ ext {
 	supportLibVersion = '1.0.0'
 	androidXVersion = '1.1.0'
 	androidXMaterial = '1.1.0-beta01'
-	androidXKtlinCore = '1.1.0'
+	androidXKtCore = '1.1.0'
+	androidXKtLifeCycle = '2.1.0'
 
 	versionCodeNum = 1
 	versionNameString = '0.0.0'
