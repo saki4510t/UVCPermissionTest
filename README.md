@@ -1,5 +1,5 @@
-# UVCPermissionTest
-===
+UVCPermissionTest
+=========
 
 Test app to confirm whether or not app can get USB permission for UVC device with verious target SDK version.
 
