@@ -1,5 +1,6 @@
 # UVCPermissionTest
 ===
+
 Test app to confirm whether or not app can get USB permission for UVC device with verious target SDK version.
 
 Copyright (c) 2019 saki t_saki@serenegiant.com
@@ -54,7 +55,7 @@ OK in following tables means app could get USB permission NG means app could't g
 
 
 ### Note:  
-   When app request permission, or when user give permission from system permission dialog, Android output error message on logCat.  
+   When app request permission, or when user give permission from system permission dialog, Android output error message on logCat regardless app has `CAMERA permission` or not.  
    ```
    UsbUserSettingsManager: Camera permission required for USB video class devices
    ```
