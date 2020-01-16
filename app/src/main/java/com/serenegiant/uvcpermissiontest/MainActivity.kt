@@ -38,6 +38,25 @@ class MainActivity : AppCompatActivity() {
 		mLogScrollView = findViewById(R.id.log_scrollview)
 		logTv = findViewById(R.id.log_textview)
 
+		// output information to screen
+		var msg = "targetSDKVersion=${applicationInfo.targetSdkVersion}"
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			msg = "${msg}\n    minSDKVersion=${applicationInfo.minSdkVersion}"
+		}
+		msg = "${msg}\n    SDK_INT=${Build.VERSION.SDK_INT}\n" +
+			"    BOARD=${Build.BOARD}\n" +
+			"    BOOTLOADER=${Build.BOOTLOADER}\n" +
+			"    BRAND=${Build.BRAND}\n" +
+			"    DEVICE=${Build.DEVICE}\n" +
+			"    DISPLAY=${Build.DISPLAY}\n" +
+			"    HARDWARE=${Build.HARDWARE}\n" +
+			"    ID=${Build.ID}\n" +
+			"    MANUFACTURER=${Build.MANUFACTURER}\n" +
+			"    PRODUCT=${Build.PRODUCT}\n" +
+			"    TAGS=${Build.TAGS}\n" +
+			"    VERSION.MODEL=${Build.MODEL}\n"
+		log("Info", msg)
+
 		// check CAMERA permission
 		val hasPermission= ActivityCompat.checkSelfPermission(this,
 			Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
