@@ -15,15 +15,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion versionTarget
         versionCode versionCodeNum
-        versionName versionNameString
-
-        manifestPlaceholders = [app_name:"UVCPermissionTest_targetSDK${versionTarget}"]
-
-        buildConfigField "int", "TARGET_SDK", "${versionTarget}"
-
-        applicationId "com.serenegiant.uvcpermissiontest"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,6 +26,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "UVCPermissionTest"
+   	productFlavors {
+   		API27 {
+            dimension "UVCPermissionTest"
+            def ver = 27
+            targetSdkVersion ver
+
+            versionName "${versionNameString}_${ver}"
+            applicationId "com.serenegiant.uvcpermissiontest.api${ver}"
+            manifestPlaceholders = [app_name:"UVCPermissionTest_API${ver}"]
+   		}
+        API28 {
+            dimension "UVCPermissionTest"
+            def ver = 28
+            targetSdkVersion ver
+
+            versionName "${versionNameString}_${ver}"
+            applicationId "com.serenegiant.uvcpermissiontest.api${ver}"
+            manifestPlaceholders = [app_name:"UVCPermissionTest_API${ver}"]
+        }
+   		APILatest {
+            dimension "UVCPermissionTest"
+            def ver = versionTarget
+            targetSdkVersion ver
+
+            versionName "${versionNameString}_${ver}"
+            applicationId "com.serenegiant.uvcpermissiontest.api${ver}"
+            manifestPlaceholders = [app_name:"UVCPermissionTest_API${ver}"]
+   		}
+   	}
 }
 
 dependencies {
