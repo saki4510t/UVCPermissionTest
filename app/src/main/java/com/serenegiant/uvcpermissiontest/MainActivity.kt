@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
 		if (DEBUG) Log.v(TAG, "onCreate:")
 		setContentView(R.layout.activity_main)
-		this.setTitle("targetSDK${BuildConfig.TARGET_SDK}")
+		this.setTitle("targetSDK${applicationInfo.targetSdkVersion}")
 		mainFrame = findViewById(R.id.main_frame)
 		mLogScrollView = findViewById(R.id.log_scrollview)
 		logTv = findViewById(R.id.log_textview)
