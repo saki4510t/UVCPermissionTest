@@ -93,7 +93,7 @@ android {
 
             versionName "api${ver}_${versionNameString}"
             applicationId "com.serenegiant.uvcpermissiontest.api${ver}"
-            manifestPlaceholders = [app_name:"UVCPermissionTest_API${ver}"]
+            manifestPlaceholders = [app_name:"api${ver}UVCPermissionTest"]
    		}
    	}
 }
