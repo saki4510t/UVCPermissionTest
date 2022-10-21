@@ -255,7 +255,7 @@ class MainActivity : AppCompatActivity() {
 				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
 			}
 		val hasPermission = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-		log("Result", "hasPermission=$hasPermission\n    ${deviceName(device)}(${device})")
+		log("Result", "hasPermission=$hasPermission\n    ${deviceName(device)}")
 	}
 
 //--------------------------------------------------------------------------------
