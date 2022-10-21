@@ -291,7 +291,7 @@ class MainActivity : AppCompatActivity() {
 		runOnUiThread {
 			var flags = 0
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-				flags = flags or PendingIntent.FLAG_IMMUTABLE
+				flags = flags or PendingIntent.FLAG_MUTABLE
 			}
 			val permissionIntent = PendingIntent.getBroadcast(this, REQ_PERMISSION_USB,
 				 Intent(ACTION_USB_PERMISSION)
