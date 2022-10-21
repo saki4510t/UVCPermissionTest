@@ -70,6 +70,21 @@ class MainActivity : AppCompatActivity() {
 		} else {
 			log("CAMERA permission", "before Android 9,CAMERA permission=$hasPermission")
 		}
+	}
+	
+	override fun onNewIntent(intent: Intent?) {
+		super.onNewIntent(intent)
+		if (DEBUG) Log.v(TAG, "onNewIntent:$intent")
+		if (intent != null) {
+			runOnUiThread {
+				handleIntent(intent)
+			}
+		}
+	}
+	
+	override fun onStart() {
+		super.onStart()
+		if (DEBUG) Log.v(TAG, "onStart:")
 		// Register BroadcastReceiver to receive USB related events
 		val filter = IntentFilter(ACTION_USB_PERMISSION)
 		filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
@@ -83,20 +98,15 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 	
-	override fun onNewIntent(intent: Intent?) {
-		super.onNewIntent(intent)
-		if (DEBUG) Log.v(TAG, "onNewIntent:$intent")
-		if (intent != null) {
-			runOnUiThread {
-				handleIntent(intent)
-			}
-		}
+	override fun onStop() {
+		if (DEBUG) Log.v(TAG, "onStop:")
+		unregisterReceiver(mBroadcastReceiver)
+		log("BroadcastReceiver", "unregister")
+		super.onStop()
 	}
 	
 	override fun onDestroy() {
 		if (DEBUG) Log.v(TAG, "onDestroy:")
-		unregisterReceiver(mBroadcastReceiver)
-		log("BroadcastReceiver", "unregister")
 		super.onDestroy()
 	}
 	
