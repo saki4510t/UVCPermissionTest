@@ -1,2 +1,20 @@
-include ':app'
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		google()
+		mavenCentral()
+	}
+}
+dependencyResolutionManagement {
+	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+	repositories {
+		google()
+		mavenCentral()
+		maven { url 'https://raw.github.com/saki4510t/libcommon/master/repository/' }
+		maven { url 'https://raw.github.com/saki4510t/RecordingService/master/repository/' }
+		mavenLocal()
+	}
+}
+
 rootProject.name='UVCPermissionTest'
+include ':app'

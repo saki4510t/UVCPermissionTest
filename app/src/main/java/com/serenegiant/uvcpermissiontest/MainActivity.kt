@@ -24,16 +24,16 @@ import kotlin.math.min
 
 class MainActivity : AppCompatActivity() {
 	
-	private var mainFrame: View? = null
-	private var mLogScrollView: ScrollView? = null
-	private var logTv: TextView? = null
+	private lateinit var mainFrame: View
+	private lateinit var mLogScrollView: ScrollView
+	private lateinit var logTv: TextView
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		if (DEBUG) Log.v(TAG, "onCreate:")
 		setContentView(R.layout.activity_main)
-		this.setTitle("targetSDK${applicationInfo.targetSdkVersion}")
+		this.title = "targetSDK${applicationInfo.targetSdkVersion}"
 		mainFrame = findViewById(R.id.main_frame)
 		mLogScrollView = findViewById(R.id.log_scrollview)
 		logTv = findViewById(R.id.log_textview)
@@ -118,14 +118,14 @@ class MainActivity : AppCompatActivity() {
 		if (result) {
 			if (permission == Manifest.permission.CAMERA) {
 				log("CAMERA permission", "granted")
-				Snackbar.make(mainFrame!!,
+				Snackbar.make(mainFrame,
 					R.string.camera_permission_granted, Snackbar.LENGTH_SHORT
 				).show()
 				scanAttachedDevice()
 			}
 		} else {
 			log("CAMERA permission", "denied")
-			Snackbar.make(mainFrame!!,
+			Snackbar.make(mainFrame,
 				R.string.camera_permission_denied, Snackbar.LENGTH_SHORT
 			).show()
 		}
@@ -139,22 +139,20 @@ class MainActivity : AppCompatActivity() {
 	private fun requestCameraPermission() {
 		if (DEBUG) Log.v(TAG, "requestCameraPermission:")
 		if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-			if (mainFrame != null) {
-				Snackbar.make(mainFrame!!,
-					R.string.camera_access_required, Snackbar.LENGTH_INDEFINITE)
-					.setAction(android.R.string.ok) {
-						// Request the permission
-						log("CAMERA permission", "request")
-						ActivityCompat.requestPermissions(
-							this@MainActivity,
-							arrayOf(Manifest.permission.CAMERA),
-							REQ_PERMISSION_CAMERA
-						)
-					}
-					.show()
-			}
+			Snackbar.make(mainFrame,
+				R.string.camera_access_required, Snackbar.LENGTH_INDEFINITE)
+				.setAction(android.R.string.ok) {
+					// Request the permission
+					log("CAMERA permission", "request")
+					ActivityCompat.requestPermissions(
+						this@MainActivity,
+						arrayOf(Manifest.permission.CAMERA),
+						REQ_PERMISSION_CAMERA
+					)
+				}
+				.show()
 		} else {
-			Snackbar.make(mainFrame!!,
+			Snackbar.make(mainFrame,
 				R.string.camera_unavailable, Snackbar.LENGTH_SHORT
 			).show()
 			log("CAMERA permission", "request")
@@ -203,7 +201,11 @@ class MainActivity : AppCompatActivity() {
 	 */
 	private fun handleActionOnAttachDevice(intent: Intent) {
 		val manager = getSystemService(Context.USB_SERVICE) as UsbManager
-		val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+		val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+			} else {
+				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+			}
 		var hasPermission = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
 		if (device != null) {
 			hasPermission = hasPermission || manager.hasPermission(device)
@@ -222,7 +224,11 @@ class MainActivity : AppCompatActivity() {
 	 * when app received detach event of USB device
 	 */
 	private fun handleActionOnDetachDevice(intent: Intent) {
-		val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+		val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+			} else {
+				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+			}
 		log("USB_DEVICE_DETACHED", deviceName(device))
 	}
 	
@@ -230,7 +236,11 @@ class MainActivity : AppCompatActivity() {
 	 * when app received the result of requesting USB access permission.
 	 */
 	private fun handleActionUsbPermission(intent: Intent) {
-		val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+		val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+			} else {
+				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+			}
 		val hasPermission = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
 		log("Result", "hasPermission=$hasPermission\n    ${deviceName(device)}")
 	}
@@ -266,10 +276,14 @@ class MainActivity : AppCompatActivity() {
 	private fun requestUsbPermission(manager: UsbManager, device: UsbDevice) {
 		log("USB permission", "request\n    ${deviceName(device)}")
 		runOnUiThread {
+			var flags = 0
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+				flags = flags or PendingIntent.FLAG_IMMUTABLE
+			}
 			val permissionIntent = PendingIntent.getBroadcast(this, REQ_PERMISSION_USB,
 				 Intent(ACTION_USB_PERMISSION)
 				 	.setPackage(packageName),
-				0)
+				flags)
 			manager.requestPermission(device, permissionIntent)
 		}
 	}
@@ -302,10 +316,10 @@ class MainActivity : AppCompatActivity() {
 	private fun deviceName(device: UsbDevice?): String {
 		var result = "device is null"
 		if (device != null) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				result = if (!TextUtils.isEmpty(device.productName)) device.productName!! else device.deviceName
+			result = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				if (!TextUtils.isEmpty(device.productName)) device.productName!! else device.deviceName
 			} else {
-				result = device.deviceName
+				device.deviceName
 			}
 		}
 		return result
@@ -317,8 +331,8 @@ class MainActivity : AppCompatActivity() {
 	 */
 	private fun log(tag: String, msg: String) {
 		runOnUiThread {
-			logTv?.append("$tag:\n    $msg\n")
-			mLogScrollView?.scrollTo(0, logTv!!.getBottom())
+			logTv.append("$tag:\n    $msg\n")
+			mLogScrollView.scrollTo(0, logTv.bottom)
 		}
 	}
 
