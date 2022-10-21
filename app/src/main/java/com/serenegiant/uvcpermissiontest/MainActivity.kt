@@ -210,6 +210,7 @@ class MainActivity : AppCompatActivity() {
 	 * when app received attach event of USB device
 	 */
 	private fun handleActionOnAttachDevice(intent: Intent) {
+		if (DEBUG) Log.v(TAG, "handleActionOnAttachDevice:$intent")
 		val manager = getSystemService(Context.USB_SERVICE) as UsbManager
 		val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
@@ -234,6 +235,7 @@ class MainActivity : AppCompatActivity() {
 	 * when app received detach event of USB device
 	 */
 	private fun handleActionOnDetachDevice(intent: Intent) {
+		if (DEBUG) Log.v(TAG, "handleActionOnDetachDevice:$intent")
 		val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
 			} else {
@@ -246,13 +248,14 @@ class MainActivity : AppCompatActivity() {
 	 * when app received the result of requesting USB access permission.
 	 */
 	private fun handleActionUsbPermission(intent: Intent) {
+		if (DEBUG) Log.v(TAG, "handleActionUsbPermission:$intent")
 		val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
 			} else {
 				intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
 			}
 		val hasPermission = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-		log("Result", "hasPermission=$hasPermission\n    ${deviceName(device)}")
+		log("Result", "hasPermission=$hasPermission\n    ${deviceName(device)}(${device})")
 	}
 
 //--------------------------------------------------------------------------------
